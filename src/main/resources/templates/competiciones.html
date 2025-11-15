@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Competiciones</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+</head>
+<body class="p-4">
+  <div th:replace="fragments/navbar :: navbar"></div>
+
+  <div class="container">
+    <h1 class="mb-3">Competiciones</h1>
+
+    <!-- Tabla -->
+    <table class="table table-striped align-middle">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Monto Premio</th>
+          <th>Inicio</th>
+          <th>Fin</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="c : ${competiciones}">
+          <td th:text="${c.id}"></td>
+          <td th:text="${c.nombre}"></td>
+          <td th:text="${c.montoPremio}"></td>
+          <td th:text="${c.fechaInicio}"></td>
+          <td th:text="${c.fechaFin}"></td>
+          <td>
+            <a class="btn btn-success btn-sm" th:href="@{/competiciones/edit/{id}(id=${c.id})}">Editar</a>
+            <button class="btn btn-danger btn-sm" type="button" th:onclick="'deleteCompeticion(' + ${c.id} + ')'">Borrar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Formulario Crear/Editar -->
+    <h3 th:text="${competicion.id != null} ? 'Editar Competición' : 'Crear Competición'"></h3>
+    <form th:action="${competicion.id != null} ? @{/competiciones/update} : @{/competiciones}"
+          th:object="${competicion}"
+          method="post">
+
+      <input type="hidden" th:field="*{id}" />
+
+      <div class="mb-3">
+        <label class="form-label">Nombre</label>
+        <input class="form-control" type="text" th:field="*{nombre}" placeholder="Nombre" required/>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Monto Premio</label>
+        <input class="form-control" type="number" th:field="*{montoPremio}" placeholder="Monto Premio"/>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Fecha de Inicio</label>
+        <input class="form-control" type="date" th:field="*{fechaInicio}"/>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Fecha de Fin</label>
+        <input class="form-control" type="date" th:field="*{fechaFin}"/>
+      </div>
+
+      <button class="btn btn-primary" th:text="${competicion.id != null} ? 'Actualizar' : 'Guardar'"></button>
+      <a th:if="${competicion.id != null}" class="btn btn-secondary ms-2" href="/competiciones">Cancelar</a>
+    </form>
+  </div>
+
+<script>
+function deleteCompeticion(id){
+  if(confirm('¿Seguro que deseas eliminar esta competición?')){
+    fetch('/api/competiciones/' + id, { method: 'DELETE' })
+      .then(()=> location.reload());
+  }
+}
+</script>
+</body>
+</html>

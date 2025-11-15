@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Clubs</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+</head>
+<body class="p-4">
+  <div th:replace="fragments/navbar :: navbar"></div>
+
+  <div class="container">
+    <h1 class="mb-3">Clubs</h1>
+
+    <!-- Tabla de clubs -->
+    <table class="table table-striped align-middle">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Entrenador</th>
+          <th>Asociación</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="c : ${clubs}">
+          <td th:text="${c.id}"></td>
+          <td th:text="${c.nombre}"></td>
+          <td th:text="${c.entrenador != null ? c.entrenador.nombre + ' ' + c.entrenador.apellido : '-'}"></td>
+          <td th:text="${c.asociacion != null ? c.asociacion.nombre : '-'}"></td>
+          <td>
+            <a class="btn btn-success btn-sm" th:href="@{/clubs/edit/{id}(id=${c.id})}">Editar</a>
+            <button class="btn btn-danger btn-sm" type="button" th:onclick="'deleteClub(' + ${c.id} + ')'">Borrar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Formulario Crear/Editar -->
+    <h3 id="formTitle" th:text="${club.id != null} ? 'Editar Club' : 'Crear Club'"></h3>
+    <form id="clubForm"
+          th:action="${club.id != null} ? @{/clubs/update} : @{/clubs}"
+          th:object="${club}"
+          method="post">
+
+      <input type="hidden" th:field="*{id}" />
+
+      <div class="mb-3">
+        <label class="form-label">Nombre</label>
+        <input class="form-control" type="text" th:field="*{nombre}" required/>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Entrenador (ID)</label>
+        <input class="form-control" type="number" th:field="*{entrenador.id}" placeholder="Opcional"/>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Asociación (ID)</label>
+        <input class="form-control" type="number" th:field="*{asociacion.id}" placeholder="Opcional"/>
+      </div>
+
+      <button class="btn btn-primary" id="submitBtn" th:text="${club.id != null} ? 'Actualizar' : 'Guardar'"></button>
+      <a th:if="${club.id != null}" class="btn btn-secondary ms-2" href="/clubs">Cancelar</a>
+    </form>
+  </div>
+
+<script>
+function deleteClub(id){
+  if(confirm('¿Seguro que deseas eliminar este club?')){
+    fetch('/api/clubes/' + id, { method: 'DELETE' })
+      .then(()=> location.reload());
+  }
+}
+</script>
+</body>
+</html>
