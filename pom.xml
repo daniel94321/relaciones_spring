@@ -8,11 +8,11 @@
 		<version>3.4.11</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.crudsabado</groupId>
-	<artifactId>CRUDSABADO</artifactId>
+	<groupId>com.spring_relaciones_ready</groupId>
+	<artifactId>spring_relaciones_ready</artifactId>
 	<version>1</version>
-	<name>CRUDSABADO</name>
-	<description>Crud Sabado</description>
+	<name>spring_relaciones_ready</name>
+	<description>spring_relaciones_ready</description>
 	<url/>
 	<licenses>
 		<license/>
